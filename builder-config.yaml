@@ -1,0 +1,27 @@
+dist:
+  name: otelcol-dev
+  description: Experimental OTel Collector for AppDynamics / FSO
+  output_path: ./otelcol-dev
+  otelcol_version: 0.88.0
+
+exporters:
+  - gomod:
+      go.opentelemetry.io/collector/exporter/loggingexporter v0.88.0
+  - gomod:
+      github.com/fhdumont/otelcol-appdymamics/collector/exporter/appdynamics v0.0.1
+    path: collector/exporter/appdynamics
+  - gomod:
+      github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusremotewriteexporter v0.88.0
+
+processors:
+  - gomod:
+      github.com/open-telemetry/opentelemetry-collector-contrib/processor/attributesprocessor v0.88.0
+
+receivers:
+  - gomod:
+      go.opentelemetry.io/collector/receiver/otlpreceiver v0.88.0
+  - gomod:
+      github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hostmetricsreceiver v0.88.0
+
+excludes:
+  - github.com/knadh/koanf v1.5.0

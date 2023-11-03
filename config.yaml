@@ -1,0 +1,43 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+  hostmetrics:
+    collection_interval: 5s
+    scrapers:
+      load:
+      memory:
+      processes:
+
+processors:
+  attributes:
+    include:
+      match_type: strict
+      metric_names: ["system.cpu.load_average.1m", "system.cpu.load_average.15m", "system.cpu.load_average.5m"]
+    actions:
+      - key: "host.name"
+        action: insert
+        value: "$HOSTNAME"
+
+exporters:
+  logging:
+    verbosity: detailed
+  appdynamics:
+    metrics:
+      logMetricRecords: true
+      url: http://localhost:8293/api/v1/metrics
+      prefix: "Custom Metrics"
+  prometheusremotewrite:
+    endpoint: http://localhost:9091/api/v1/write
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp, hostmetrics]
+      processors: [attributes]
+      exporters: [appdynamics]
+
+  telemetry:
+    logs:
+      level: info

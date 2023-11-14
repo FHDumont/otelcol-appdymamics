@@ -9,6 +9,13 @@ receivers:
       load:
       memory:
       processes:
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: "otel-collector"
+          scrape_interval: 5s
+          static_configs:
+            - targets: ["0.0.0.0:9091"]
 
 processors:
   attributes:
@@ -39,9 +46,13 @@ exporters:
 service:
   pipelines:
     metrics:
-      receivers: [otlp, hostmetrics]
-      processors: [attributes]
-      exporters: [appdynamics, prometheusremotewrite]
+      receivers: [otlp]
+      # receivers: [otlp, prometheus]
+      # receivers: [otlp, hostmetrics, prometheus]
+      # processors: [attributes]
+      # exporters: [appdynamics, prometheusremotewrite]
+      # exporters: [logging]
+      exporters: [appdynamics]
 
   telemetry:
     logs:

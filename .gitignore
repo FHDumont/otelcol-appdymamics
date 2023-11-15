@@ -21,3 +21,4 @@
 go.work
 
 otelcol-dev*
+docker/controller.env

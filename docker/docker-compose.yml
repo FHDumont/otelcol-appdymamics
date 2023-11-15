@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  otel-machineagent:
+    build:
+      context: ./
+      dockerfile: ./machine-agent/Dockerfile
+    container_name: otel-machineagent
+    image: fernandodumont/machine-agent:1.0
+    env_file: ./controller.env
+    # network_mode: "host"
+    environment:
+      - APPDYNAMICS_SIM_ENABLED=true
+      - APPDYNAMICS_DOCKER_ENABLED=true
+      - APPDYNAMICS_AGENT_ENABLE_CONTAINERIDASHOSTID=true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /:/hostroot:ro
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    expose:
+      - 3892
+      - 9090
+      - 8293
+    ports:
+      - 3892:3892
+      - 9090:9090
+      - 8293:8293
+
+  otelcol-appdynamics:
+    container_name: otelcol-appdynamics
+    image: fernandodumont/otelcol-appdynamics:1.0
+
+volumes:
+  otel-dumont:

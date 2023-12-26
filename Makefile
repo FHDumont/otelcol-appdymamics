@@ -8,4 +8,3 @@ build:
 run: build
 	set -o allexport
 	./otelcol-dev/otelcol-dev --config=config.yaml
-

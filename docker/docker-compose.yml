@@ -9,10 +9,10 @@ services:
     image: fernandodumont/machine-agent:1.0
     env_file: ./controller.env
     # network_mode: "host"
-    environment:
-      - APPDYNAMICS_SIM_ENABLED=true
-      - APPDYNAMICS_DOCKER_ENABLED=true
-      - APPDYNAMICS_AGENT_ENABLE_CONTAINERIDASHOSTID=true
+    # environment:
+    # - APPDYNAMICS_SIM_ENABLED=true
+    # - APPDYNAMICS_DOCKER_ENABLED=true
+    # - APPDYNAMICS_AGENT_ENABLE_CONTAINERIDASHOSTID=true
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
@@ -32,6 +32,12 @@ services:
   otelcol-appdynamics:
     container_name: otelcol-appdynamics
     image: fernandodumont/otelcol-appdynamics:1.0
+    volumes:
+      - ../config.yaml:/etc/otel/config.yaml
+    expose:
+      - 4317
+    ports:
+      - 4317:4317
 
 volumes:
   otel-dumont:

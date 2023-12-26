@@ -14,9 +14,15 @@ processors:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/attributesprocessor v0.88.0
 
 receivers:
-  - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.88.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hostmetricsreceiver v0.88.0
-  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver v0.88.0
+  - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.88.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/influxdbreceiver v0.88.0
+
+# relative paths are related to dist/output_path -> ../<path-from-project-root>
+replaces:
+  - github.com/chrlic/otelcol-cust/collector/shared/contextdb => ../collector/shared/contextdb
+  - github.com/chrlic/otelcol-cust/collector/shared/expressions => ../collector/shared/expressions
+  - github.com/chrlic/otelcol-cust/collector/shared/jsonscraper => ../collector/shared/jsonscraper
 
 excludes:
   - github.com/knadh/koanf v1.5.0

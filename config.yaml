@@ -3,57 +3,35 @@ receivers:
     protocols:
       grpc:
       http:
-  hostmetrics:
-    collection_interval: 5s
-    scrapers:
-      load:
-      memory:
-      processes:
-  prometheus:
-    config:
-      scrape_configs:
-        - job_name: "otel-collector"
-          scrape_interval: 5s
-          static_configs:
-            - targets: ["0.0.0.0:9091"]
-
-processors:
-  attributes:
-    include:
-      match_type: strict
-      metric_names:
-        [
-          "system.cpu.load_average.1m",
-          "system.cpu.load_average.15m",
-          "system.cpu.load_average.5m",
-        ]
-    actions:
-      - key: "host.name"
-        action: insert
-        value: "$HOSTNAME"
 
 exporters:
   logging:
     verbosity: detailed
   appdynamics:
     metrics:
-      logMetricRecords: true
-      url: http://localhost:8293/api/v1/metrics
+      enabled: true
+      url: http://otel-machineagent:8293/api/v1/metrics
       prefix: "Custom Metrics"
-  prometheusremotewrite:
-    endpoint: http://localhost:9091/api/v1/write
+      rules:
+        - description: cpu load average 1m
+          matchConditions:
+            - metricName: system.cpu.load_average.1m
+          pathTemplate: 'HostMetrics|{{index .A "metricName"}}'
+          aggregatorType: AVERAGE
+        - description: teste robo fabricio
+          matchConditions:
+            - metricName: primeiro_contador
+          pathTemplate: 'Robot|{{index .A "metricName"}}'
+          aggregatorType: SUM
+    analytics:
+      enabled: false
 
 service:
   pipelines:
     metrics:
       receivers: [otlp]
-      # receivers: [otlp, prometheus]
-      # receivers: [otlp, hostmetrics, prometheus]
-      # processors: [attributes]
-      # exporters: [appdynamics, prometheusremotewrite]
-      # exporters: [logging]
       exporters: [appdynamics]
 
   telemetry:
     logs:
-      level: info
+      level: debug
